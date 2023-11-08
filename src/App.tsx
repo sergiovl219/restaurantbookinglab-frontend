@@ -1,16 +1,19 @@
 import React from 'react';
 import { Link, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 import Login from './components/Login';
 import HomePage from './components/HomePage';
 import OwnerHome from './components/OwnerHome';
-import { useSelector } from 'react-redux';
 import { selectIsLoggedIn } from './store/slices/authSlice';
+
+import './App.css';
 
 function Navbar() {
     const isLoggedIn = useSelector(selectIsLoggedIn);
 
     return (
-        <nav>
+        <nav className="sidebar">
             <ul>
                 <li>
                     <Link to="/">Home</Link>
@@ -32,11 +35,13 @@ function App() {
     return (
         <div className="App">
             <Navbar />
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/" element={<HomePage />} />
-                <Route path="/ownerHome" element={<OwnerHome />} />
-            </Routes>
+            <div className="main-content">
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/ownerHome" element={<OwnerHome />} />
+                </Routes>
+            </div>
         </div>
     );
 }
