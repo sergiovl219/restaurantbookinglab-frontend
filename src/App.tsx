@@ -1,12 +1,21 @@
 import React from 'react';
 import Login from './components/Login';
+import HomePage from './components/HomePage';
+import {useSelector} from "react-redux";
+import {selectIsLoggedIn} from "./store/slices/authSlice";
 
 function App() {
-  return (
-      <div className="App">
-        <Login />
-      </div>
-  );
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+
+    return (
+        <div className="App">
+            {isLoggedIn ? (
+                <HomePage />
+            ) : (
+                <Login />
+            )}
+        </div>
+    );
 }
 
 export default App;
