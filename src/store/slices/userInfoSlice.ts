@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface UserInfoState {
     owner: {
@@ -24,7 +24,7 @@ const userInfoSlice = createSlice({
     name: 'userInfo',
     initialState,
     reducers: {
-        setUserInfo: (state, action) => {
+        setUserInfo: (state, action: PayloadAction<UserInfoState>) => {
             state.owner = action.payload.owner;
             state.restaurants_info = action.payload.restaurants_info;
         },

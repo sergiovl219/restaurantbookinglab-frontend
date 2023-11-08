@@ -3,6 +3,7 @@ import { login, userinfo } from "../services/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setIsLoggedIn, selectIsLoggedIn } from "../store/slices/authSlice";
 import { setUserInfo } from "../store/slices/userInfoSlice";
+import { Navigate } from "react-router-dom";
 
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
@@ -44,7 +45,7 @@ const Login: React.FC = () => {
         <div>
             <h1>Login</h1>
             {isLoggedIn ? (
-                <div className="success">Login successful!</div>
+                <Navigate to="/" />
             ) : (
                 <form onSubmit={handleSubmit}>
                     <div>
