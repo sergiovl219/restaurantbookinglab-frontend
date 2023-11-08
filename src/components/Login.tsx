@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { login, userinfo } from "../services/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setIsLoggedIn, selectIsLoggedIn } from "../store/slices/authSlice";
-import { selectUserInfo, setUserInfo } from "../store/slices/userInfoSlice";
+import { setUserInfo } from "../store/slices/userInfoSlice";
 
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
@@ -10,7 +10,6 @@ const Login: React.FC = () => {
     const [error, setError] = useState('');
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(selectIsLoggedIn);
-    const userInfo = useSelector(selectUserInfo);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,10 +39,6 @@ const Login: React.FC = () => {
             }
         }
     };
-
-    useEffect(() => {
-        console.log('UserInfo State:', userInfo);
-    }, [userInfo]); // Escuchar cambios en userInfo
 
     return (
         <div>
