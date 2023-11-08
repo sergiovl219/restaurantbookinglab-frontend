@@ -20,7 +20,6 @@ const Login: React.FC = () => {
                 if (response.status === 200) {
                     const token = response.data.token;
                     dispatch(setToken(token));
-
                 } else {
                     setError('Login failed. Verify your credentials.');
                 }
@@ -29,7 +28,6 @@ const Login: React.FC = () => {
             }
         }
     };
-
     return (
         <div>
             <h1>Login</h1>
