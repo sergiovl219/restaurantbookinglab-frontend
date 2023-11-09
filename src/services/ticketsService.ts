@@ -18,3 +18,17 @@ export function createTicket(restaurantID: string, ticketData: object, token: st
     };
     return api.post(`tickets/restaurant/${restaurantID}/create`, ticketData, { headers});
 }
+
+export function updateTicket(restaurantID: string, ticketID: string, ticketData: object, token: string) {
+    const headers = {
+        Authorization: `Token ${token}`,
+    };
+    return api.put(`tickets/restaurant/${restaurantID}/ticket/${ticketID}`, ticketData, { headers});
+}
+
+export function deleteTicket(restaurantID: string, ticketID: string, token: string) {
+    const headers = {
+        Authorization: `Token ${token}`,
+    };
+    return api.delete(`tickets/restaurant/${restaurantID}/ticket/${ticketID}`, { headers});
+}
