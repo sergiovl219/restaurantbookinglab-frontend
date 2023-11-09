@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUserInfo } from '../store/slices/userInfoSlice';
-import { selectRestaurantID, setRestaurantID } from '../store/slices/restaurantSlice';
+import {selectRestaurantID, setRestaurantID, setRestaurantURL} from '../store/slices/restaurantSlice';
 
 const HomePage: React.FC = () => {
     const userInfo = useSelector(selectUserInfo);
@@ -11,12 +11,20 @@ const HomePage: React.FC = () => {
     useEffect(() => {
         if (userInfo && userInfo.restaurants_info.length > 0) {
             dispatch(setRestaurantID(userInfo.restaurants_info[0].id));
+            dispatch(setRestaurantURL(userInfo.restaurants_info[0].page_url));
         }
     }, [userInfo, dispatch]);
 
     const handleRestaurantChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedRestaurantId = event.target.value;
-        dispatch(setRestaurantID(selectedRestaurantId));
+        const selectedRestaurant = userInfo.restaurants_info.find(
+            restaurant => restaurant.id === selectedRestaurantId
+        );
+
+        if (selectedRestaurant) {
+            dispatch(setRestaurantID(selectedRestaurantId));
+            dispatch(setRestaurantURL(selectedRestaurant.page_url));
+        }
     };
 
     return (
