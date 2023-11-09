@@ -8,7 +8,7 @@ import Login from './components/Login';
 import HomePage from './components/HomePage';
 import TicketsList from "./components/TicketsList";
 import Account from "./components/Account";
-import TicketForm from "./components/TicketForm";
+import AdminTickets from "./components/AdminTickets";
 
 import { selectIsLoggedIn } from './store/slices/authSlice';
 import { selectRestaurantURL } from './store/slices/restaurantSlice';
@@ -30,7 +30,7 @@ function Navbar() {
                             <Link to="/account">Account</Link>
                         </li>
                         <li>
-                            <Link to="/crudTickets">Tickets Admin</Link>
+                            <Link to="/crudTickets">Admin Tickets</Link>
                         </li>
                     </>
                 )}
@@ -61,7 +61,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/account" element={<Account />} />
                     <Route path={`/${restaurantURL}/tickets`} element={<TicketsList />} />
-                    <Route path="/crudTickets" element={<TicketForm />} />
+                    <Route path="/crudTickets" element={<AdminTickets />} />
                 </Routes>
             </div>
         </div>

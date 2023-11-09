@@ -1,0 +1,75 @@
+import React, { useEffect, useState } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import { selectToken } from '../store/slices/authSlice';
+import { listTickets } from "../services/ticketsService";
+import { selectRestaurantID } from '../store/slices/restaurantSlice';
+import TicketForm, { TicketFormMode } from "./TicketForm";
+import {setTicket} from "../store/slices/ticketSlice";
+
+interface Ticket {
+    id: string;
+    name: string;
+    count: number;
+    max_purchase: number;
+}
+
+const AdminTickets: React.FC = () => {
+    const [tickets, setTickets] = useState<Ticket[]>([]);
+    const [formMode, setFormMode] = useState<TicketFormMode>('create');
+    const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+    const token = useSelector(selectToken);
+    const restaurantId = useSelector(selectRestaurantID);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchTickets = async () => {
+            try {
+                if (restaurantId !== 'None Selected') {
+                    const response = await listTickets(restaurantId);
+                    setTickets(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching tickets:', error);
+            }
+        };
+        fetchTickets();
+    }, [token, restaurantId]);
+
+    const handleCreateTicket = () => {
+        setFormMode('create');
+        setSelectedTicketId(null);
+    };
+
+    const handleUpdateTicket = (ticket: Ticket) => {
+        setFormMode('update');
+        setSelectedTicketId(ticket.id);
+        dispatch(setTicket(ticket))
+    };
+
+    return (
+        <div>
+            <h1>Ticket List</h1>
+            <button onClick={handleCreateTicket}>Create Ticket</button>
+            <ul>
+                {tickets.map((ticket) => (
+                    <li key={ticket.id}>
+                        <p>ID: {ticket.id}</p>
+                        <p>Name: {ticket.name}</p>
+                        <p>Count: {ticket.count}</p>
+                        <p>Max Purchase: {ticket.max_purchase}</p>
+                        <button onClick={() => handleUpdateTicket(ticket)}>Update Ticket</button>
+                    </li>
+                ))}
+            </ul>
+
+            <TicketForm
+                mode={formMode}
+                restaurantID={restaurantId}
+                token={token}
+                ticketId={selectedTicketId}
+            />
+        </div>
+    );
+}
+
+export default AdminTickets;

@@ -1,76 +1,70 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { createTicket } from '../services/ticketsService';
-import { selectRestaurantID } from '../store/slices/restaurantSlice';
-import {selectToken} from "../store/slices/authSlice";
+import {createTicket, updateTicket} from '../services/ticketsService';
+import {selectTicket, setTicket} from "../store/slices/ticketSlice";
+import {useDispatch, useSelector} from "react-redux";
+
+export type TicketFormMode = 'create' | 'update';
 
 interface TicketFormProps {
-    // TODO: Used to close the form, to be used in future
-    onClose?: () => void;
+    mode: TicketFormMode;
+    restaurantID: string;
+    token: string;
+    ticketId: string | null;
 }
 
-const TicketForm: React.FC<TicketFormProps> = ({ onClose }) => {
+const TicketForm: React.FC<TicketFormProps> = ({ mode, ticketId, restaurantID, token }) => {
+    const selectedTicketData = useSelector(selectTicket)
     const [ticketData, setTicketData] = useState({
         name: '',
-        count: 1,
-        max_purchase: 1
+        count: 0,
+        max_purchase: 0,
     });
+    const dispatch = useDispatch();
 
-    const restaurantId = useSelector(selectRestaurantID);
-    const token = useSelector(selectToken);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setTicketData((prevData) => ({
-            ...prevData,
-            [name]: name === 'count' || name === 'max_purchase' ? parseInt(value, 10) : value
-        }));
-    };
-
-    const handleCreateTicket = async (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            const response = await createTicket(restaurantId, ticketData, token);
-            console.log(response);
+            if (mode === 'create') {
+                const createResponse = await createTicket(restaurantID, ticketData, token);
+                dispatch(setTicket(createResponse.data));
+            } else if (mode === 'update' && ticketId) {
+                const updateResponse = await updateTicket(restaurantID, ticketId, ticketData, token);
+                dispatch(setTicket(updateResponse.data));
+            }
         } catch (error) {
-            console.error('Error creating ticket:', error);
+            console.error('Error submitting form:', error);
         }
     };
 
     return (
-        <div>
-            <h2>Create Ticket</h2>
-            <form onSubmit={handleCreateTicket}>
-                <div>
-                    <label>Name:</label>
-                    <input type="text" name="name" value={ticketData.name} onChange={handleInputChange} required />
-                </div>
-                <div>
-                    <label>Count:</label>
-                    <input
-                        type="number"
-                        name="count"
-                        value={ticketData.count}
-                        onChange={handleInputChange}
-                        min="1"
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Max Purchase:</label>
-                    <input
-                        type="number"
-                        name="max_purchase"
-                        value={ticketData.max_purchase}
-                        onChange={handleInputChange}
-                        min="1"
-                        required
-                    />
-                </div>
-                <button type="submit">Create Ticket</button>
-            </form>
-        </div>
+        <form onSubmit={handleFormSubmit}>
+            <label>
+                Name:
+                <input
+                    type="text"
+                    value={selectedTicketData.name}
+                    onChange={(e) => setTicketData({ ...ticketData, name: e.target.value })}
+                />
+            </label>
+            <label>
+                Count:
+                <input
+                    type="number"
+                    value={selectedTicketData.count}
+                    onChange={(e) => setTicketData({ ...ticketData, count: parseInt(e.target.value) })}
+                />
+            </label>
+            <label>
+                Max Purchase:
+                <input
+                    type="number"
+                    value={selectedTicketData.max_purchase}
+                    onChange={(e) => setTicketData({ ...ticketData, max_purchase: parseInt(e.target.value) })}
+                />
+            </label>
+            <button type="submit">{mode === 'create' ? 'Create' : 'Update'}</button>
+        </form>
     );
 };
 
