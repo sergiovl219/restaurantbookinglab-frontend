@@ -6,8 +6,8 @@ import { useSelector } from 'react-redux';
 
 import Login from './components/Login';
 import HomePage from './components/HomePage';
-import OwnerHome from './components/OwnerHome';
 import TicketsList from "./components/TicketsList";
+import Account from "./components/Account";
 
 import { selectIsLoggedIn } from './store/slices/authSlice';
 
@@ -24,7 +24,7 @@ function Navbar() {
                             <Link to="/">Home</Link>
                         </li>
                         <li>
-                            <Link to="/ownerHome">Owner Home</Link>
+                            <Link to="/account">Account</Link>
                         </li>
                     </>
                 )}
@@ -49,7 +49,7 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/ownerHome" element={<OwnerHome />} />
+                    <Route path="/account" element={<Account />} />
                     <Route path="/ticketsList" element={<TicketsList />} />
                 </Routes>
             </div>

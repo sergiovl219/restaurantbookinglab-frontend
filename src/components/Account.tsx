@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../store/slices/userInfoSlice';
 
-const OwnerHome: React.FC = () => {
+const Account: React.FC = () => {
     const userInfo = useSelector(selectUserInfo);
 
     return (
@@ -19,4 +19,4 @@ const OwnerHome: React.FC = () => {
     );
 }
 
-export default OwnerHome;
+export default Account;

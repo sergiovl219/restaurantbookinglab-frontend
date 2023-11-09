@@ -9,7 +9,18 @@ const HomePage: React.FC = () => {
         <div>
             <header>
                 {userInfo && userInfo.restaurants_info.length > 0 && (
-                    <h1>Welcome to {userInfo.restaurants_info[0].name}</h1>
+                    <div>
+                        <h1>Welcome to {userInfo.restaurants_info[0].name} Restaurant</h1>
+                        <label>Select a Restaurant:</label>
+                        <select>
+                            <option value="">None Selected</option>
+                            {userInfo.restaurants_info.map((restaurant) => (
+                                <option key={restaurant.id} value={restaurant.id}>
+                                    {restaurant.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 )}
             </header>
         </div>
