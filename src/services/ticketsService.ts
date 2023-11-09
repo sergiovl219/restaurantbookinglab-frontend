@@ -11,3 +11,10 @@ export function purchaseTicket(restaurantID: string, ticketID: string, quantity:
 export function statusTicketPurchased(taskID: string) {
     return api.get(`tickets/purchase/status/${taskID}`);
 }
+
+export function createTicket(restaurantID: string, ticketData: object, token: string) {
+    const headers = {
+        Authorization: `Token ${token}`,
+    };
+    return api.post(`tickets/restaurant/${restaurantID}/create`, ticketData, { headers});
+}
