@@ -10,10 +10,12 @@ import TicketsList from "./components/TicketsList";
 import Account from "./components/Account";
 
 import { selectIsLoggedIn } from './store/slices/authSlice';
+import { selectRestaurantURL } from './store/slices/restaurantSlice';
 
 
 function Navbar() {
     const isLoggedIn = useSelector(selectIsLoggedIn);
+    const restaurantURL = useSelector(selectRestaurantURL);
 
     return (
         <nav className="sidebar">
@@ -34,7 +36,7 @@ function Navbar() {
                     </li>
                 )}
                 <li>
-                    <Link to="/ticketsList">Tickets List</Link>
+                    <Link to={`/${restaurantURL}/tickets`}>Tickets List</Link>
                 </li>
             </ul>
         </nav>
@@ -42,6 +44,8 @@ function Navbar() {
 }
 
 function App() {
+    const restaurantURL = useSelector(selectRestaurantURL);
+
     return (
         <div className="App">
             <Navbar />
@@ -50,7 +54,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/" element={<HomePage />} />
                     <Route path="/account" element={<Account />} />
-                    <Route path="/ticketsList" element={<TicketsList />} />
+                    <Route path={`/${restaurantURL}/tickets`} element={<TicketsList />} />
                 </Routes>
             </div>
         </div>
