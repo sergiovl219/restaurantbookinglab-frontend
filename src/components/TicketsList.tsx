@@ -15,6 +15,7 @@ const TicketList: React.FC = () => {
     const [tickets, setTickets] = useState<Ticket[]>([]);
     const [selectedAmount, setSelectedAmount] = useState<number>(1);
     const [purchaseStatus, setPurchaseStatus] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const token = useSelector(selectToken);
     const restaurantId = useSelector(selectRestaurantID);
@@ -40,14 +41,21 @@ const TicketList: React.FC = () => {
             const responsePurchase = await purchaseTicket(restaurantId, ticketId, selectedAmount);
             task_id = String(responsePurchase.data.task_id);
 
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 5000)); // Esperar a que la tarea asíncrona se complete en el backend
 
             const responseStatusPurchase = await statusTicketPurchased(task_id);
             const status = responseStatusPurchase.data.status;
 
             setPurchaseStatus(status);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error purchasing ticket:', error);
+
+            if (error.response) {
+                const errorMessage = error.response.data.error_message;
+                console.error('Error Message:', errorMessage);
+                setPurchaseStatus(String(error.response.data.status));
+                setErrorMessage(errorMessage);
+            }
         }
     };
 
@@ -58,7 +66,7 @@ const TicketList: React.FC = () => {
                 <div style={{ color: purchaseStatus === 'completed' ? 'green' : 'red' }}>
                     {purchaseStatus === 'completed'
                         ? 'Purchase completed successfully!'
-                        : 'Purchase failed. Please try again refreshing.'}
+                        : errorMessage}
                 </div>
             )}
             <ul>
