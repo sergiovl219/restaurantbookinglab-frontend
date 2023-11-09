@@ -3,6 +3,7 @@ import authReducer from '../slices/authSlice';
 import userInfoReducer from '../slices/userInfoSlice';
 import restaurantReducer from '../slices/restaurantSlice';
 import ticketReducer from '../slices/ticketSlice';
+import ticketsListReducer from '../slices/ticketsListSlice';
 
 
 const rootReducer = combineReducers({
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
     userInfo: userInfoReducer,
     restaurant: restaurantReducer,
     ticket: ticketReducer,
+    ticketsList: ticketsListReducer,
 });
 
 export default rootReducer;

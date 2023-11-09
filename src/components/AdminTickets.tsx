@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectToken } from '../store/slices/authSlice';
-import {deleteTicket, listTickets} from "../services/ticketsService";
+import { deleteTicket, listTickets } from '../services/ticketsService';
 import { selectRestaurantID } from '../store/slices/restaurantSlice';
-import TicketForm, { TicketFormMode } from "./TicketForm";
-import {setTicket} from "../store/slices/ticketSlice";
+import TicketForm, { TicketFormMode } from './TicketForm';
+import { setTicket } from '../store/slices/ticketSlice';
+import { setTicketsList, selectTicketsList } from '../store/slices/ticketsListSlice';
 
 interface Ticket {
     id: string;
@@ -14,7 +15,7 @@ interface Ticket {
 }
 
 const AdminTickets: React.FC = () => {
-    const [tickets, setTickets] = useState<Ticket[]>([]);
+    const tickets = useSelector(selectTicketsList);
     const [formMode, setFormMode] = useState<TicketFormMode>('create');
     const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
     const token = useSelector(selectToken);
@@ -26,14 +27,14 @@ const AdminTickets: React.FC = () => {
             try {
                 if (restaurantId !== 'None Selected') {
                     const response = await listTickets(restaurantId);
-                    setTickets(response.data);
+                    dispatch(setTicketsList(response.data)); // Actualiza el store con la lista de tickets
                 }
             } catch (error) {
                 console.error('Error fetching tickets:', error);
             }
         };
         fetchTickets();
-    }, [token, restaurantId]);
+    }, [token, restaurantId, dispatch]);
 
     const handleCreateTicket = () => {
         setFormMode('create');
@@ -48,8 +49,6 @@ const AdminTickets: React.FC = () => {
     const handleDeleteTicket = async (ticketId: string) => {
         try {
             await deleteTicket(restaurantId, ticketId, token);
-            const updatedTickets = tickets.filter((ticket) => ticket.id !== ticketId);
-            setTickets(updatedTickets);
         } catch (error) {
             console.error('Error deleting ticket:', error);
         }
