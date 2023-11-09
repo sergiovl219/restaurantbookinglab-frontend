@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { selectToken } from '../store/slices/authSlice';
-import { listTickets } from "../services/ticketsService";
+import {deleteTicket, listTickets} from "../services/ticketsService";
 import { selectRestaurantID } from '../store/slices/restaurantSlice';
 import TicketForm, { TicketFormMode } from "./TicketForm";
 import {setTicket} from "../store/slices/ticketSlice";
@@ -45,6 +45,15 @@ const AdminTickets: React.FC = () => {
         setSelectedTicketId(ticket.id);
         dispatch(setTicket(ticket))
     };
+    const handleDeleteTicket = async (ticketId: string) => {
+        try {
+            await deleteTicket(restaurantId, ticketId, token);
+            const updatedTickets = tickets.filter((ticket) => ticket.id !== ticketId);
+            setTickets(updatedTickets);
+        } catch (error) {
+            console.error('Error deleting ticket:', error);
+        }
+    };
 
     return (
         <div>
@@ -58,6 +67,7 @@ const AdminTickets: React.FC = () => {
                         <p>Count: {ticket.count}</p>
                         <p>Max Purchase: {ticket.max_purchase}</p>
                         <button onClick={() => handleUpdateTicket(ticket)}>Update Ticket</button>
+                        <button onClick={() => handleDeleteTicket(ticket.id)}>Delete Ticket</button>
                     </li>
                 ))}
             </ul>
