@@ -32,3 +32,10 @@ export function deleteTicket(restaurantID: string, ticketID: string, token: stri
     };
     return api.delete(`tickets/restaurant/${restaurantID}/ticket/${ticketID}`, { headers});
 }
+
+export function getTicket(restaurantID: string, ticketID: string, token: string) {
+    const headers = {
+        Authorization: `Token ${token}`,
+    };
+    return api.get(`tickets/restaurant/${restaurantID}/ticket/${ticketID}`, { headers});
+}
