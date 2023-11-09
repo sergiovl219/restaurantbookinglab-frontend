@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {createTicket, listTickets, updateTicket} from '../services/ticketsService';
+import { createTicket, listTickets, updateTicket } from '../services/ticketsService';
 import { selectTicket, setTicket } from '../store/slices/ticketSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import {setTicketsList} from "../store/slices/ticketsListSlice";
+import { setTicketsList } from '../store/slices/ticketsListSlice';
 
 export type TicketFormMode = 'create' | 'update';
 
@@ -29,8 +29,16 @@ const TicketForm: React.FC<TicketFormProps> = ({
     });
 
     useEffect(() => {
-        setTicketData(selectedTicketData);
-    }, [selectedTicketData]);
+        if (mode === 'create') {
+            setTicketData({
+                name: '',
+                count: 0,
+                max_purchase: 0,
+            });
+        } else {
+            setTicketData(selectedTicketData);
+        }
+    }, [mode, selectedTicketData]);
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,7 +52,7 @@ const TicketForm: React.FC<TicketFormProps> = ({
                 dispatch(setTicket(updateResponse.data));
             }
             const listResponse = await listTickets(restaurantID);
-            dispatch(setTicketsList(listResponse.data))
+            dispatch(setTicketsList(listResponse.data));
         } catch (error) {
             console.error('Error submitting form:', error);
         }

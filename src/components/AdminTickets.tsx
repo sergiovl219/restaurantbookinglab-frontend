@@ -27,7 +27,7 @@ const AdminTickets: React.FC = () => {
             try {
                 if (restaurantId !== 'None Selected') {
                     const response = await listTickets(restaurantId);
-                    dispatch(setTicketsList(response.data)); // Actualiza el store con la lista de tickets
+                    dispatch(setTicketsList(response.data));
                 }
             } catch (error) {
                 console.error('Error fetching tickets:', error);
@@ -49,6 +49,8 @@ const AdminTickets: React.FC = () => {
     const handleDeleteTicket = async (ticketId: string) => {
         try {
             await deleteTicket(restaurantId, ticketId, token);
+            const response = await listTickets(restaurantId);
+            dispatch(setTicketsList(response.data));
         } catch (error) {
             console.error('Error deleting ticket:', error);
         }
