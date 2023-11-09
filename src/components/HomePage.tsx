@@ -1,9 +1,23 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, {useEffect} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectUserInfo } from '../store/slices/userInfoSlice';
+import { selectRestaurantID, setRestaurantID } from '../store/slices/restaurantSlice';
 
 const HomePage: React.FC = () => {
     const userInfo = useSelector(selectUserInfo);
+    const restaurantId = useSelector(selectRestaurantID);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (userInfo && userInfo.restaurants_info.length > 0) {
+            dispatch(setRestaurantID(userInfo.restaurants_info[0].id));
+        }
+    }, [userInfo, dispatch]);
+
+    const handleRestaurantChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedRestaurantId = event.target.value;
+        dispatch(setRestaurantID(selectedRestaurantId));
+    };
 
     return (
         <div>
@@ -12,8 +26,7 @@ const HomePage: React.FC = () => {
                     <div>
                         <h1>Welcome to {userInfo.restaurants_info[0].name} Restaurant</h1>
                         <label>Select a Restaurant:</label>
-                        <select>
-                            <option value="">None Selected</option>
+                        <select value={restaurantId} onChange={handleRestaurantChange}>
                             {userInfo.restaurants_info.map((restaurant) => (
                                 <option key={restaurant.id} value={restaurant.id}>
                                     {restaurant.name}
