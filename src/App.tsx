@@ -1,26 +1,71 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import React from 'react';
+import { Link, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import Login from './components/Login';
+import HomePage from './components/HomePage';
+import TicketsList from "./components/TicketsList";
+import Account from "./components/Account";
+import AdminTickets from "./components/AdminTickets";
+
+import { selectIsLoggedIn } from './store/slices/authSlice';
+import { selectRestaurantURL } from './store/slices/restaurantSlice';
+
+
+function Navbar() {
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const restaurantURL = useSelector(selectRestaurantURL);
+
+    return (
+        <nav className="sidebar">
+            <ul>
+                {isLoggedIn && (
+                    <>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/account">Account</Link>
+                        </li>
+                        <li>
+                            <Link to="/crudTickets">Admin Tickets</Link>
+                        </li>
+                    </>
+                )}
+                {!isLoggedIn && (
+                    <li>
+                        <Link to="/login">Login</Link>
+                    </li>
+                )}
+                {(
+                    <li>
+                        <Link to={`/${restaurantURL}/tickets`}>Tickets List</Link>
+                    </li>
+                )}
+            </ul>
+        </nav>
+    );
+}
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const restaurantURL = useSelector(selectRestaurantURL);
+
+    return (
+        <div className="App">
+            <Navbar />
+            <div className="main-content">
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/account" element={<Account />} />
+                    <Route path={`/${restaurantURL}/tickets`} element={<TicketsList />} />
+                    <Route path="/crudTickets" element={<AdminTickets />} />
+                </Routes>
+            </div>
+        </div>
+    );
 }
 
 export default App;
